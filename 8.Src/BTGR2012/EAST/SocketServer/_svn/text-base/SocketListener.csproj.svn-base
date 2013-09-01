@@ -1,0 +1,299 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D6829831-1290-41A5-A11C-9FDFDF90C012}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SocketListener</RootNamespace>
+    <AssemblyName>SocketListener</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>http://localhost/SocketServer/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FlexCel, Version=4.9.6.0, Culture=neutral, PublicKeyToken=cb8f6080e6d5a4d6" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph, Version=5.1.4.28365, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <HintPath>bin\Debug\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="background.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="background.Designer.cs">
+      <DependentUpon>background.cs</DependentUpon>
+    </Compile>
+    <Compile Include="branch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="branch.Designer.cs">
+      <DependentUpon>branch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="login.Designer.cs">
+      <DependentUpon>login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="message.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="message.Designer.cs">
+      <DependentUpon>message.cs</DependentUpon>
+    </Compile>
+    <Compile Include="rz_flowchart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="rz_flowchart.Designer.cs">
+      <DependentUpon>rz_flowchart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="rz_main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="rz_main.Designer.cs">
+      <DependentUpon>rz_main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="systemmanage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="systemmanage.Designer.cs">
+      <DependentUpon>systemmanage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tool\Devicedriver\DataInfo.cs" />
+    <Compile Include="Tool\Database\DB.cs" />
+    <Compile Include="Tool\Devicedriver\xd100x.cs" />
+    <Compile Include="Tool\Socket\CommuniPortManager.cs" />
+    <Compile Include="Tool\Socket\CommuniPort.cs" />
+    <Compile Include="Tool\Socket\SocketListenerManager.cs" />
+    <Compile Include="Tool\UserInterface\ExportDGA.cs" />
+    <Compile Include="Tool\Devicedriver\Gprs.cs" />
+    <Compile Include="Tool\Socket\SocketCommuniPort.cs" />
+    <Compile Include="Tool\Socket\SocketListener.cs" />
+    <Compile Include="Tool\Devicedriver\xd100.cs" />
+    <Compile Include="Tool\Devicedriver\xd100n.cs" />
+    <Compile Include="curve.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="curve.Designer.cs">
+      <DependentUpon>curve.cs</DependentUpon>
+    </Compile>
+    <Compile Include="main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="main.Designer.cs">
+      <DependentUpon>main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tool\UserInterface\PrintDGV.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="background.resx">
+      <DependentUpon>background.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="branch.resx">
+      <DependentUpon>branch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="curve.resx">
+      <DependentUpon>curve.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="login.resx">
+      <DependentUpon>login.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="main.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="message.resx">
+      <DependentUpon>message.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rz_flowchart.resx">
+      <DependentUpon>rz_flowchart.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rz_main.resx">
+      <DependentUpon>rz_main.cs</DependentUpon>
+      <SubType>Designer</SubType>
+      <LastGenOutput>rz_main1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="systemmanage.resx">
+      <DependentUpon>systemmanage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetValue.resx">
+      <DependentUpon>SetValue.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="xg_main.resx">
+      <DependentUpon>xg_main.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Tool\Devicedriver\xd300.cs" />
+    <Compile Include="SetValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetValue.Designer.cs">
+      <DependentUpon>SetValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tool\UserInterface\UersCheck.cs" />
+    <Compile Include="xg_main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="xg_main.Designer.cs">
+      <DependentUpon>xg_main.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\imageres_84.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\head.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\biaozhi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\colse.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dili.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gongre.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\xungeng.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\quxian.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guanli.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guanwang.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yuanli.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\denglu.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shiyi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

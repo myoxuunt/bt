@@ -1,0 +1,40 @@
+10
+
+dir
+44
+svn://192.168.1.32/btgrproject/EAST/SocketServer/Tool
+svn://192.168.1.32/btgrproject
+
+
+
+2010-09-04T03:55:10.020691Z
+44
+qiang
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+e86f1acc-12cd-564d-aa1b-12cd345387f5
+
+UserInterface
+dir
+
+Database
+dir
+
+Socket
+dir
+
+Devicedriver
+dir
+

@@ -1,0 +1,391 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml;
+
+namespace xg
+{
+    public partial class xg_main : Form
+    {
+        public xg_main()
+        {
+            InitializeComponent();
+        }
+
+        private int lessspace;
+        private DataTable dttemp;
+        private DataTable dthis;
+        private DataTable dtpre;
+
+        private void xg_main_Load(object sender, EventArgs e)
+        {
+            load_xml();
+            //实时数据相关
+            loadreal();
+            //历史数据相关
+            loadper();
+        }
+        //加载配置
+        private void load_xml()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load("config.xml");
+            lessspace = Convert.ToInt32(xDoc.DocumentElement.ChildNodes[6].Attributes.GetNamedItem("value").Value.Trim());
+            numericUpDown2.Value = lessspace;
+        }
+
+        //dgv隔行颜色
+        private void DGV_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            for (int i = 0; i < dgv.Rows.Count; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    dgv.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
+                }
+            }
+        }
+        //更新巡更站点缓存表
+        private DataTable Reflashtemp(DateTime date1, DateTime date2)
+        {
+            string sql = "SELECT [DT] as [时间],[DeviceID],[Person] as [巡更人员] FROM tblXGData  WHERE  [DT]>='" + date1 + "' and [DT]<'" + date2 + "' order by [DT]";
+            return  Tool.DB.getDt(sql);
+        }
+        //翻页更新时间
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dateTimePicker3.Value = DateTime.Now.Date.AddDays(-1).AddHours(8);
+            dateTimePicker4.Value = DateTime.Now.Date.AddHours(8);
+
+            dateTimePicker6.Value = DateTime.Now.Date.AddDays(-1).AddHours(8);
+            dateTimePicker5.Value = DateTime.Now.Date.AddHours(8);
+        }
+        //获取某个站点的有效列表
+        private DataTable Getcount(int DeviceID, DataTable dt, int space)
+        {
+            DataTable dt2 = new DataTable();
+            dt2.Columns.Add("时间");
+            dt2.Columns.Add("巡更人员");
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (Convert.ToInt32(dt.Rows[i]["DeviceID"].ToString()) == DeviceID)
+                {
+                    dt2.Rows.Add();
+                    dt2.Rows[dt2.Rows.Count - 1]["时间"] = dt.Rows[i]["时间"];
+                    dt2.Rows[dt2.Rows.Count - 1]["巡更人员"] = dt.Rows[i]["巡更人员"];
+                }
+            }
+
+            DataTable dt3 = new DataTable();
+            dt3.Columns.Add("时间");
+            dt3.Columns.Add("巡更人员");
+
+            if (dt2.Rows.Count == 0)
+            {
+                return dt3;
+            }
+            DateTime old = Convert.ToDateTime(dt2.Rows[0]["时间"]);
+            dt3.Rows.Add();
+            dt3.Rows[0]["时间"] = dt2.Rows[0]["时间"];
+            dt3.Rows[0]["巡更人员"] = dt2.Rows[0]["巡更人员"];
+            for (int k = 1; k < dt2.Rows.Count; k++)
+            {
+                if ((Convert.ToDateTime(dt.Rows[k]["时间"]) - old).TotalMinutes > space)
+                {
+                    old = Convert.ToDateTime(dt.Rows[k]["时间"]);
+                    dt3.Rows.Add();
+                    dt3.Rows[dt3.Rows.Count-1]["时间"] = dt2.Rows[k]["时间"];
+                    dt3.Rows[dt3.Rows.Count-1]["巡更人员"] = dt2.Rows[k]["巡更人员"];
+                }
+            }
+            return dt3;
+        }
+        //校时
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Tool.xd300._XD300Buffer.Length; i++)
+            {
+                if (Tool.xd300._XD300Buffer[i]._Info._id == Convert.ToInt32(dataGridView1["DeviceID", dataGridView1.CurrentRow.Index].Value))
+                {
+                    Tool.xd300._XD300Buffer[i]._Command[3]._cmd = Tool.xd300.Set_date(Tool.xd300._XD300Buffer[i]._Info._addr);
+                    Tool.xd300._XD300Buffer[i]._Command[3]._onoff = true;
+                    Tool.xd300._XD300Buffer[i]._Command[4]._cmd = Tool.xd300.Set_time(Tool.xd300._XD300Buffer[i]._Info._addr);
+                    Tool.xd300._XD300Buffer[i]._Command[4]._onoff = true;
+                    MessageBox.Show("成功添加校时任务！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+        //采集
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null)
+            {
+                return;
+            }
+            for (int i = 0; i < Tool.xd300._XD300Buffer.Length; i++)
+            {
+                if (Tool.xd300._XD300Buffer[i]._Info._id == Convert.ToInt32(dataGridView1["DeviceID", dataGridView1.CurrentRow.Index].Value))
+                {
+                    Tool.xd300._XD300Buffer[i]._Command[0]._cmd = Tool.xd300.Get_recordcount(Tool.xd300._XD300Buffer[i]._Info._addr);
+                    Tool.xd300._XD300Buffer[i]._Command[0]._onoff = true;
+                    MessageBox.Show("成功添加即时采集任务！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+        //保存间隔
+        private void button4_Click(object sender, EventArgs e)
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load("config.xml");
+            xDoc.DocumentElement.ChildNodes[6].Attributes.GetNamedItem("value").Value = Convert.ToInt32(numericUpDown2.Value).ToString();
+            xDoc.Save("config.xml");
+            lessspace = Convert.ToInt32(numericUpDown2.Value);
+        }
+
+        #region real
+        //加载实时数据列表
+        private void loadreal()
+        {
+            dttemp = Reflashtemp(DateTime.Now.Date.AddDays(-1).AddHours(8), DateTime.Now);
+            loadreallist(dataGridView1);
+            timer1.Interval = 60000;
+            timer1.Enabled = true;
+        }
+        //加载实时站点数据列表
+        private void loadreallist(DataGridView dgv)
+        {
+            string sql = "select DeviceID,GroupName,StationName from vDevice where [DeviceType]='xd300'";
+            DataTable dt = Tool.DB.getDt(sql);
+            sql = "SELECT [DeviceID],[GroupName],[StationName],[DT], [Person] FROM [vXGDataLast] ";
+            DataTable dt2 = Tool.DB.getDt(sql);
+
+            dt2.Rows.Clear();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dt2.Rows.Add();
+                dt2.Rows[i]["DeviceID"] = dt.Rows[i]["DeviceID"];
+                dt2.Rows[i]["GroupName"] = dt.Rows[i]["GroupName"];
+                dt2.Rows[i]["StationName"] = dt.Rows[i]["StationName"];
+            }
+
+            dt2.Columns.Add("count", typeof(string));
+
+            dgv.DataSource = dt2;
+            dgv.Columns["DeviceID"].Visible = false;
+
+            string[] dgv_columns = { "DeviceID","GroupName" , "StationName","DT", "Person", "count" };
+            string[] dgv_showname = { "设备标识", "分组名称","站点名称", "时间", "巡更人员", "当日巡更次数" };
+            //    int[] dgv_columnswide = {10,100,150,170,100};
+            for (int i = 0; i < dgv_columns.Length; i++)
+            {
+                dgv.Columns[dgv_columns[i]].HeaderText = dgv_showname[i];
+                //       dataGridView1.Columns[dgv_columns[i]].Width = dgv_columnswide[i];
+            }
+            reflashreal();
+        }
+        //定时更新数据
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            reflashreal();
+        }
+        //刷新按钮
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            reflashreal();
+        }
+        //刷新数据
+        private void reflashreal()
+        {
+            dttemp = Reflashtemp(DateTime.Now.Date.AddDays(-1).AddHours(8), DateTime.Now);
+            for (int i = 0; i < Tool.xd300._XD300Buffer.Length; i++)
+            {
+                DataTable dt = dataGridView1.DataSource as DataTable;
+                for (int j = 0; j < dt.Rows.Count; j++)
+                {
+                    if (Tool.xd300._XD300Buffer[i]._Info._id == Convert.ToInt32(dt.Rows[j]["DeviceID"]))
+                    {
+                        DataTable dt2 = Getcount(Tool.xd300._XD300Buffer[i]._Info._id, dttemp, lessspace);
+                        if (Tool.xd300._XD300Buffer[i]._Data._dt == null)
+                        {
+                            continue;
+                        }
+                        dt.Rows[j]["DT"] = Tool.xd300._XD300Buffer[i]._Data._dt;
+                        dt.Rows[j]["Person"] = Tool.xd300._XD300Buffer[i]._Data._person;
+                        dt.Rows[j]["count"] = dt2.Rows.Count;
+                    }
+                }
+            }
+        }
+        //显示详细内容
+        private void dataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null)
+            {
+                return;
+            }
+            DataTable dt = Getcount(Convert.ToInt32(dataGridView1.CurrentRow.Cells["DeviceID"].Value), dttemp, lessspace);
+            dataGridView4.DataSource = dt;
+        }
+        //导出
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            Tool.Export.saveAs(dataGridView1, "巡更实时数据");
+        }
+        #endregion
+
+        #region his
+        //历史查询
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dthis =  Reflashtemp(dateTimePicker3.Value, dateTimePicker4.Value);
+            loadhislist(dataGridView3);
+        }
+        private void loadhislist(DataGridView dgv)
+        {
+            string sql = "select DeviceID,GroupName,StationName from vDevice where [DeviceType]='xd300'";
+            DataTable dt = Tool.DB.getDt(sql);
+
+            dt.Columns.Add("count", typeof(string));
+
+            dgv.DataSource = dt;
+            dgv.Columns["DeviceID"].Visible = false;
+
+            string[] dgv_columns = { "DeviceID", "GroupName", "StationName", "count" };
+            string[] dgv_showname = { "设备标识","分组名称", "站点名称", "巡更次数" };
+            //    int[] dgv_columnswide = {10,100,150,170,100};
+            for (int i = 0; i < dgv_columns.Length; i++)
+            {
+                dgv.Columns[dgv_columns[i]].HeaderText = dgv_showname[i];
+                //       dataGridView1.Columns[dgv_columns[i]].Width = dgv_columnswide[i];
+            }
+
+            for (int i = 0; i < Tool.xd300._XD300Buffer.Length; i++)
+            {
+                for (int j = 0; j < dt.Rows.Count; j++)
+                {
+                    if (Tool.xd300._XD300Buffer[i]._Info._id == Convert.ToInt32(dt.Rows[j]["DeviceID"]))
+                    {
+                        DataTable dt2 = Getcount(Tool.xd300._XD300Buffer[i]._Info._id, dthis, lessspace);
+                        dt.Rows[j]["count"] = dt2.Rows.Count;
+                    }
+                }
+            }
+        }
+        //导出左表
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Tool.Export.saveAs(dataGridView3, "巡更历史数据  " + dateTimePicker3.Value + "-" + dateTimePicker4.Value);
+        }
+        //导出右表
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (dataGridView3.CurrentRow == null)
+            {
+                return;
+            }
+            Tool.Export.saveAs(dataGridView2, dataGridView3.CurrentRow.Cells["站点名称"]+ " 巡更历史数据  " + dateTimePicker3.Value + "-" + dateTimePicker4.Value);
+        }
+        //显示详细内容
+        private void dataGridView3_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (dataGridView3.CurrentRow == null)
+            {
+                return;
+            }
+            DataTable dt = Getcount(Convert.ToInt32(dataGridView3.CurrentRow.Cells["DeviceID"].Value), dthis, lessspace);
+            dataGridView2.DataSource = dt;
+        }
+        #endregion
+
+        //按人员查询
+        #region
+        private void loadper()
+        {
+            string sql= "SELECT [CardID],[Person] FROM [vCard]";
+            DataTable dt = Tool.DB.getDt(sql);
+            comboBox1.DataSource = dt;
+            comboBox1.DisplayMember = "Person";
+            comboBox1.ValueMember = "CardID";
+            comboBox1.SelectedIndex = 0;
+        }
+        #endregion
+        //更新巡更人员缓存表
+        private DataTable Reflashtemp(DateTime date1, DateTime date2,string name)
+        {
+            string sql = "SELECT [DT] as [时间],[DeviceID],[Person] as [巡更人员] FROM tblXGData  WHERE  [Person] ='" + name + "'and [DT]>='" + date1 + "' and [DT]<'" + date2 + "'   order by [DT]";
+            return Tool.DB.getDt(sql);
+        }
+        //加载站点列表
+        private void loadprelist(DateTime date1, DateTime date2,string name,DataGridView dgv)
+        {
+            DataTable dt = Tool.DB.getDt("select DISTINCT([DeviceID]) FROM tblXGData  WHERE [Person] ='" + name + "'and [DT]>='" + date1 + "' and [DT]<'" + date2 + "'");
+          //  dt.Columns.Add("分组名称");
+            dt.Columns.Add("站点名称");
+            dt.Columns.Add("打卡次数");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int j = 0; j < Tool.xd300._XD300Buffer.Length; j++)
+                {
+                    if (dt.Rows[i]["DeviceID"].ToString() == Tool.xd300._XD300Buffer[i]._Info._id.ToString())
+                    {
+                       // dt.Rows[i]["分组名称"] = Tool.xd300._XD300Buffer[i];
+                        dt.Rows[i]["站点名称"] = Tool.xd300._XD300Buffer[i]._Info._name;
+                        DataTable dt2 = Getcount(Tool.xd300._XD300Buffer[i]._Info._id, dtpre, lessspace);
+                        dt.Rows[j]["打卡次数"] = dt2.Rows.Count;
+                    }
+                }
+            }
+            dgv.DataSource = dt;
+            dgv.Columns["DeviceID"].Visible = false;
+            
+        }
+        //人员查询
+        private void button6_Click(object sender, EventArgs e)
+        {
+            dtpre = Reflashtemp(dateTimePicker6.Value, dateTimePicker5.Value,comboBox1.Text);
+            loadprelist(dateTimePicker6.Value, dateTimePicker5.Value, comboBox1.Text, dataGridView5);
+        }
+        //详细信息
+        private void dataGridView5_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (dataGridView5.CurrentRow == null)
+            {
+                return;
+            }
+            DataTable dt = Getcount(Convert.ToInt32(dataGridView5.CurrentRow.Cells["DeviceID"].Value), dtpre, lessspace);
+            dataGridView6.DataSource = dt;
+        }
+        //导出左表
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Tool.Export.saveAs(dataGridView3, "巡更历史数据  " + dateTimePicker6.Value + "-" + dateTimePicker5.Value);
+        }
+        //导出右表
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (dataGridView6.CurrentRow == null)
+            {
+                return;
+            }
+            Tool.Export.saveAs(dataGridView6, dataGridView5.CurrentRow.Cells["站点名称"] + " 巡更历史数据  " + dateTimePicker6.Value + "-" + dateTimePicker5.Value);
+
+        }
+
+ 
+
+
+
+    }
+}

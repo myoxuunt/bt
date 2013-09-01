@@ -1,3 +1,0 @@
-1. one connection string 
-   [o]
-2. dbversion
