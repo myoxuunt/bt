@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "btGRMain", "btGRMain.csproj", "{CF1E8471-B01F-4275-9F98-ABDDA04B9D6F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "btGR", "btGR\btGR.csproj", "{6DF84E0C-FA60-48C9-9D64-7DAD0552C7AA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 2
+		SccProjectUniqueName0 = btGRMain.csproj
+		SccProjectName0 = \u0022$/btGRMain\u0022,\u0020NGAAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectUniqueName1 = btGR\\btGR.csproj
+		SccProjectName1 = \u0022$/btGRMain\u0022,\u0020NGAAAAAA
+		SccLocalPath1 = .
+		SccProvider1 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectFilePathRelativizedFromConnection1 = btGR\\
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{CF1E8471-B01F-4275-9F98-ABDDA04B9D6F}.Debug.ActiveCfg = Debug|.NET
+		{CF1E8471-B01F-4275-9F98-ABDDA04B9D6F}.Debug.Build.0 = Debug|.NET
+		{CF1E8471-B01F-4275-9F98-ABDDA04B9D6F}.Release.ActiveCfg = Release|.NET
+		{CF1E8471-B01F-4275-9F98-ABDDA04B9D6F}.Release.Build.0 = Release|.NET
+		{6DF84E0C-FA60-48C9-9D64-7DAD0552C7AA}.Debug.ActiveCfg = Debug|.NET
+		{6DF84E0C-FA60-48C9-9D64-7DAD0552C7AA}.Debug.Build.0 = Debug|.NET
+		{6DF84E0C-FA60-48C9-9D64-7DAD0552C7AA}.Release.ActiveCfg = Release|.NET
+		{6DF84E0C-FA60-48C9-9D64-7DAD0552C7AA}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
